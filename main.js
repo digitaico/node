@@ -1,13 +1,11 @@
 'use strict';
 
 // imports
-var fs = require("fs")
+var events = require("events");
 
-fs.readFile('input.txt', (err, data) => {
-	if (err) return console.error(err);
-	console.log(data.toString());
-});
+var eventEmitter = new events.EventEmitter();
 
-console.log("Programa terminado");
+eventEmitter.on('eventname', eventHandler);
+
 
 
