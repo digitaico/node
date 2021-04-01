@@ -1,24 +1,32 @@
 'Use strict';
 
-// imports
 var events = require("events");
 
 var eventEmitter = new events.EventEmitter();
 
-var connectHandler = function connected() {
-	console.log('conexion exitosa!');
-
-	eventEmitter.emit('data_received');
+var listener1 = function listener1() {
+	console.log('listener1 executed');
 }
 
-eventEmitter.on('connection', connectHandler);
+var listener2 = function listener2() {
+	console.log('listener2 executed');
+}
 
-eventEmitter.on('data_received', () => {
-	console.log('data recibida exitosamente!');
-})
+eventEmitter.addListener('connection', listener1);
+eventEmitter.on('connection', listener2);
+
+var eventListeners = require('events').EventEmitter.listenerCount
+	(eventEmitter, 'connection');
+console.log(eventListeners + 'Listener(s) listening to connection event');
 
 eventEmitter.emit('connection');
 
-console.log('programa terminado');
+eventEmitter.removeListener('connection', listener1);
+console.log('listener 1 ya no listen');
 
+eventEmitter.emit('connection');
 
+eventListeners = require('events').EventEmitter.listenerCount(eventEmitter, 'connection');
+console.log(eventListeners + ' Listener(s) listening to connection event');
+
+console.log('program termimnprogram termimnoo');
