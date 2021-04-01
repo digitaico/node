@@ -1,10 +1,13 @@
 'use strict';
 
-var http = require("http");
+// imports
+var fs = require("fs")
 
-http.createServer((request, response) => {
-	response.writeHead(200, {'Content-Type': 'text/plain'});
-	response.end('Hola mundo jea node\n');
-}).listen(8081);
+fs.readFile('input.txt', (err, data) => {
+	if (err) return console.error(err);
+	console.log(data.toString());
+});
 
-console.log('Server running at localhost:8081');
+console.log("Programa terminado");
+
+
