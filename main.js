@@ -3,7 +3,7 @@
 const express = require('express');
 const axios = require('axios');
 const redis = require('redis');
-const redisPort = 6379;
+const redisPort = process.env.PORT ||  6379;
 const client = redis.createClient(redisPort);
 const app = express();
 
