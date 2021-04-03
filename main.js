@@ -1,31 +1,41 @@
-'Use strict';
+'use strict';
 
-var events = require("events");
+const express = require('express');
+const axios = require('axios');
+const redis = require('redis');
+const redisPort = 6379;
+const client = redis.createClient(redisPort);
+const app = express();
 
-var eventEmitter = new events.EventEmitter();
+app.get('/jobs', async (req, res) => {
+	const searchTerm = req.query.search;
+	try{
+		client.get(searchTerm, async (err, jobs) => {
+			if (err) throw err;
 
-var listener1 = function listener1() {
-	console.log('listener1 executed');
-}
+			if (jobs) {
+				res.status(200).send({
+					jobs: JSON.parse(jobs),
+					message: 'Data retrieved from cache.'
+				});
+			} else {
+				const jobs = await axios.get(`https://jobs.github.com/positions.json?search=${searchTerm}`);
+				client.setex(searchTerm, 600, JSON.stringify(jobs.data));
+				res.status(200).send({
+					jobs: jobs.data,
+					message: 'cache miss'
+				});
+			}
+		});
+	} catch(err) {
+		res.status(500).send({message: err.message});
+	}
+});
 
-var listener2 = function listener2() {
-	console.log('listener2 executed');
-}
+app.listen(process.env.PORT || 3000, () => {
+	console.log('Servidor node inicio!');
+});
 
-eventEmitter.addListener('connection', listener1);
-eventEmitter.on('connection', listener2);
-
-var eventListeners = require('events').EventEmitter.listenerCount (eventEmitter, 'connection');
-console.log(eventListeners + 'Listener(s) listening to connection event');
-
-eventEmitter.emit('connection');
-
-eventEmitter.removeListener('connection', listener1);
-console.log('listener 1 ya no listen');
-
-eventEmitter.emit('connection');
-
-eventListeners = require('events').EventEmitter.listenerCount(eventEmitter, 'connection');
-console.log(eventListeners + ' Listener(s) listening to connection event');
-
-console.log('program termimnprogram termimnoo');
+client.on('error', (err) => {
+	console.log(err);
+});
