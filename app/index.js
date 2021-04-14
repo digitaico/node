@@ -1,9 +1,25 @@
-const calc = require('./calc')
-const _ = require('lodash')
+const express = require('express')
+const app = express()
 
-_.assign({'a': 1}, {'b': 2}, {'c': 3});
+app.use((req, res, next) => {
+	console.log(req.headers)
+	next()
+})
 
-const numbersToAdd = [3, 4, 10, 2]
+app.use((req, res, next) => {
+	req.chance = Math.random()
+	next()
+})
 
-const result = calc.sum(numbersToAdd)
-console.log(`El resultado es ${result}`)
+app.use((err, req, res, next) => {
+	console.log(err)
+	res.status(500).send('Algo se daño!')
+})
+
+app.get('/', (req, res) => {
+	res.json({
+		chance: req.chance
+	})
+})
+
+app.listen(3000)
