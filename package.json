@@ -1,0 +1,31 @@
+{
+  "name": "test2",
+  "version": "1.0.0",
+  "description": "pruebas jea",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitaico/node.git"
+  },
+  "keywords": [
+    "async",
+    "await",
+    "node",
+    "concurrency"
+  ],
+  "author": "Jorge Eduardo Ardila",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/digitaico/node/issues"
+  },
+  "homepage": "https://github.com/digitaico/node#readme",
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "express": "^4.17.1",
+    "redis": "^3.1.1"
+  }
+}
